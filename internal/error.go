@@ -31,4 +31,5 @@ var (
 	ErrPingMismatched = errors.New("[err] ping mismatched")
 	// ErrReqInvalidArguments occurs when request arguments is invalid or not exist.
 	ErrReqInvalidArguments            = errors.New("[err] invalid arguments for requests")
+	ErrUnsupportedS3BucketKeyManifest = errors.New("[err] unsupported s3 bucket key in media manifest")
 )

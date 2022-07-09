@@ -3,6 +3,7 @@ module github.com/chur-squad/loveframe-server
 go 1.18
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gjbae1212/go-wraperror v0.7.0
 	github.com/labstack/echo/v4 v4.7.2
 )

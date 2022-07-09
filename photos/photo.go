@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"time"
 	"strings"
-	"github.com/chur-sqaud/loveframe-server/internal"
+	"github.com/chur-squad/loveframe-server/internal"
 	"github.com/labstack/echo/v4"	
 	_jwt "github.com/chur-squad/loveframe-server/jwt"
-	_error "github.com/chur-sqaud/loveframe-server/error"
+	_error "github.com/chur-squad/loveframe-server/error"
 )
 type Extension string
 
@@ -45,7 +45,7 @@ var (
 )
 
 type Manager interface {
-	GetPhotoFromCdn(ctx echo.Context) ([]byte, error)
+	GetPhotoFromCdn(ctx echo.Context, jwt _jwt.UserJwt) ([]byte, error)
 }
 
 type photoMaker struct {
