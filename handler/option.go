@@ -1,14 +1,12 @@
 package handler
 
-import "database/sql"
-
 // Option is an interface for dependency injection.
 type Option interface {
 	apply(c *Handler)
 }
 
 type Config struct {
-	Mysql       *sql.DB
+	MysqlDSN    string
 	CdnEndpoint string
 	GroupSalt   string
 	UserSalt    string

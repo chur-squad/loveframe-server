@@ -40,7 +40,6 @@ func (h *Handler) Photos(c echo.Context) error {
 	return photoOK(ctx, headers, photo)
 }
 
-// https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/HTTPStatusCodes.html#HTTPStatusCodes-cached-errors-general
 func photoError(ctx echo.Context, err error) error {
 	// if a request returns http 4xx or 5xx, cloudfront caches about 5 minutes.
 	// maybe if http 400, 403, 412, 415 status with cache-control header returns, it's able to control cache time.

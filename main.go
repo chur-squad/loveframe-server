@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"flag"
 	"fmt"
 	_error "github.com/chur-squad/loveframe-server/error"
@@ -13,7 +11,6 @@ import (
 	"os/signal"
 	"runtime"
 	"syscall"
-	"time"
 )
 
 var (
@@ -47,6 +44,8 @@ func main() {
 		panic(err)
 	}
 
+	h.Mysql.AddUser(1, "Kim jaehyun")
+
 	// create signal handler
 	signalCtx, signalStop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	// serve echo
@@ -57,6 +56,7 @@ func main() {
 		} else {
 			e.Start(*echoAddr)
 		}
+
 	}()
 	//server loop
 	// wait for signal
@@ -72,7 +72,6 @@ func initEchoServer(h *handler.Handler) (*echo.Echo, error) {
 	// create echo server
 	e := echo.New()
 
-	
 	// add route
 	if err := addRoute(e, h); err != nil {
 		return nil, _error.WrapError(err)
@@ -83,20 +82,31 @@ func initEchoServer(h *handler.Handler) (*echo.Echo, error) {
 
 func createConfigForHandler() (*handler.Config, error) {
 	// generate handler config
-	database, err := connectDatabase()
-	if err != nil {
-		return nil, err
-	}
-
+	
 	cfg := &handler.Config{
-		Mysql:       database,
 		CdnEndpoint: env.GetCdnEndpoint(),
 		GroupSalt:   env.GetGroupCodeSalt(),
 		UserSalt:    env.GetUserCodeSalt(),
 	}
+
+	var (
+		dbUsername, dbPassword, dbHost, dbPort, dbName string
+	)
+
+	dbUsername = env.GetDatabaseUsername()
+	dbPassword = env.GetDatabasePassword()
+	dbHost = env.GetDatabaseHost()
+	dbPort = env.GetDatabasePort()
+	dbName = env.GetDatabaseName()
+
+	// add database DSN config
+	cfg.MysqlDSN = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4,utf8&timeout=1s&autocommit=true&parseTime=true",
+		dbUsername, dbPassword, dbHost, dbPort, dbName)
+
 	return cfg, nil
 }
 
+/*
 func connectDatabase() (database *sql.DB, err error) {
 	user := env.GetDatabaseUsername()
 	password := env.GetDatabasePassword()
@@ -111,6 +121,7 @@ func connectDatabase() (database *sql.DB, err error) {
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(10)
 
-	fmt.Print(db.Stats())
+	fmt.Print()
 	return db, nil
 }
+*/
