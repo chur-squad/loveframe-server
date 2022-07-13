@@ -72,6 +72,7 @@ func initEchoServer(h *handler.Handler) (*echo.Echo, error) {
 	// create echo server
 	e := echo.New()
 
+	
 	// add route
 	if err := addRoute(e, h); err != nil {
 		return nil, _error.WrapError(err)
@@ -97,19 +98,19 @@ func createConfigForHandler() (*handler.Config, error) {
 }
 
 func connectDatabase() (database *sql.DB, err error) {
-	user := env.GetDatabaseHost()
+	user := env.GetDatabaseUsername()
 	password := env.GetDatabasePassword()
 	dbname := env.GetDatabaseName()
 	dbconfig := fmt.Sprintf("%s:%s@/%s", user, password, dbname)
-
+	
 	db, err := sql.Open("mysql", dbconfig)
 	if err != nil {
 		return nil, _error.WrapError(err)
 	}
-
 	db.SetConnMaxLifetime(time.Minute * 1)
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(10)
 
+	fmt.Print(db.Stats())
 	return db, nil
 }
