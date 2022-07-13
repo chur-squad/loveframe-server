@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"flag"
 	"fmt"
 	_error "github.com/chur-squad/loveframe-server/error"
 	"github.com/chur-squad/loveframe-server/handler"
+	"github.com/chur-squad/loveframe-server/env"
 	"github.com/labstack/echo/v4"
 	"os/signal"
 	"runtime"
@@ -95,7 +97,12 @@ func createConfigForHandler() (*handler.Config, error) {
 }
 
 func connectDatabase() (database *sql.DB, err error) {
-	db, err := sql.Open("mysql", env.DatabaseaConfig())
+	user := env.GetDatabaseHost()
+	password := env.GetDatabasePassword()
+	dbname := env.GetDatabaseName()
+	dbconfig := fmt.Sprintf("%s:%s@/%s", user, password, dbname)
+
+	db, err := sql.Open("mysql", dbconfig)
 	if err != nil {
 		return nil, _error.WrapError(err)
 	}
