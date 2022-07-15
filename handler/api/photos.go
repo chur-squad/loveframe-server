@@ -4,6 +4,7 @@ import (
 	_error "github.com/chur-squad/loveframe-server/error"
 	_jwt "github.com/chur-squad/loveframe-server/jwt"
 	"github.com/labstack/echo/v4"
+	"fmt"
 )
 
 const (
@@ -11,12 +12,17 @@ const (
 )
 
 // Manifest is serving a content manifest file which customized manually.
+// test request
+//http://localhost:8080/api/photos?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFMk5UZ3lNall3T0RNc0ltWnlhV1Z1WkVsa0lqb2lhRzl1WjJKcGJpSXNJbkJoZEhSbGNtNGlPaUl2YW1GbGFIbDFiaTkwWlhOMExtcHdaV2NpZlEuTEt0RndWM1hRYUwwYUE1S2xaYWRMa3hrYU5EWlZ4SkN2dWdxbUFyRFJSYw
 func (h *Handler) Photos(c echo.Context) error {
 	ctx := c
 	// Ctx query setting logic check needed
 	encryptedJwt := ctx.QueryParam("jwt")
 
+	// need to add get param logic
+	// currently managet initialize return 0 to m variable
 	m, err := _jwt.NewManager()
+	fmt.Print("check manager", m)
 	if err != nil {
 		// can change error type
 		return photoError(ctx, _error.WrapError(err))

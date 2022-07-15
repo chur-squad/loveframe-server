@@ -8,6 +8,7 @@ type Option interface {
 type Config struct {
 	MysqlDSN    string
 	CdnEndpoint string
+	UserJwtSalt	string
 	GroupSalt   string
 	UserSalt    string
 }
@@ -48,7 +49,7 @@ func (cfg *Config) Valid() (ok bool) {
 		return
 	}
 	// Check a salt for encrypting data exists or not.
-	if cfg.GroupSalt == "" || cfg.UserSalt == "" {
+	if cfg.UserJwtSalt == "" || cfg.GroupSalt == "" || cfg.UserSalt == "" {
 		return
 	}
 

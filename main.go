@@ -22,7 +22,6 @@ var (
 func main() {
 	// parse args
 	flag.Parse()
-	fmt.Println(flag.Args())
 	// check go processor
 	fmt.Printf("logical cpu = %d, go processor = %d, \n", runtime.NumCPU(), runtime.GOMAXPROCS(0))
 
@@ -44,7 +43,7 @@ func main() {
 		panic(err)
 	}
 
-	h.Mysql.AddUser(1, "Kim jaehyun")
+	//h.Mysql.AddUser(1, "Kim jaehyun")
 
 	// create signal handler
 	signalCtx, signalStop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -72,6 +71,11 @@ func initEchoServer(h *handler.Handler) (*echo.Echo, error) {
 	// create echo server
 	e := echo.New()
 
+	// add middleware
+	if err := addMiddleware(e); err != nil {
+		return nil, _error.WrapError(err)
+	}
+
 	// add route
 	if err := addRoute(e, h); err != nil {
 		return nil, _error.WrapError(err)
@@ -85,6 +89,7 @@ func createConfigForHandler() (*handler.Config, error) {
 	
 	cfg := &handler.Config{
 		CdnEndpoint: env.GetCdnEndpoint(),
+		UserJwtSalt: env.GetUserJwtSalt(),
 		GroupSalt:   env.GetGroupCodeSalt(),
 		UserSalt:    env.GetUserCodeSalt(),
 	}

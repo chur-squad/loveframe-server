@@ -3,6 +3,7 @@ package jwt
 import (
 	"github.com/chur-squad/loveframe-server/internal"
 	_error "github.com/chur-squad/loveframe-server/error"
+	"fmt"
 )
 
 const (
@@ -20,6 +21,8 @@ type Manager interface {
 
 type manager struct {
 	userJwtSalt		[]byte
+	userSalt        string
+	groupSalt       string
 }
 
 // ManagerOption is an interface for Manager, it's used for dependency injection.
@@ -33,9 +36,19 @@ type ManagerOptionFunc func(m *manager)
 func (opt ManagerOptionFunc) apply(m *manager) { opt(m) }
 
 
-// WithManifestJwtSalt returns a function for setting salt for manifest JWT.
+// WithUserJwtSalt returns a function for setting salt for user JWT.
 func WithUserJwtSalt(salt []byte) ManagerOptionFunc {
 	return func(m *manager) { m.userJwtSalt = salt }
+}
+
+// WithUserSalt returns a function for setting salt for user.
+func WithUserSalt(salt string) ManagerOptionFunc {
+	return func(m *manager) { m.userSalt = salt }
+}
+
+// WithGroupSalt returns a function for setting salt for group.
+func WithGroupSalt(salt string) ManagerOptionFunc {
+	return func(m *manager) { m.groupSalt = salt }
 }
 
 // NewManager creates Manager interface.
@@ -50,7 +63,7 @@ func NewManager(opts ...ManagerOption) (Manager, error) {
 	for _, opt := range mergeOpts {
 		opt.apply(m)
 	}
-
+	fmt.Print(string(m.userJwtSalt), len(m.userJwtSalt))
 	if len(m.userJwtSalt) == 0  {
 		return nil, _error.WrapError(internal.ErrInvalidParams)
 	}
