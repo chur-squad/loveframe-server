@@ -39,13 +39,18 @@ func NewHandler(opts ...Option) (*Handler, error) {
 		return nil, _error.WrapError(err)
 	}
 
+	photo, err := photos.NewManager(
+		photos.WithCdnEndpoint(h.Cfg.CdnEndpoint),
+	)
+
 	mysql, err := mysql.NewMysql(h.Cfg.MysqlDSN, 2)
 
 	if err != nil {
 		return nil, _error.WrapError(err)
 	}
-	h.Mysql = mysql
 	h.Jwt = jwt
+	h.Photo = photo
+	h.Mysql = mysql
 
 	return h, nil
 }

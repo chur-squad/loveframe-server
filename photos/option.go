@@ -21,8 +21,8 @@ func WithCdnClient(client *http.Client) OptionFunc {
 	}
 }
 
-// WithCdnEndpointForDash returns dependency injection method for dash cdn endpoint
-func WithCdnEndpointForDash(endpoint string) OptionFunc {
+// WithCdnEndpoint returns dependency injection method for cdn (photo store)
+func WithCdnEndpoint(endpoint string) OptionFunc {
 	return func(m *photoMaker) {
 		m.cdnEndpoint = endpoint
 	}

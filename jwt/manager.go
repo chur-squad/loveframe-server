@@ -3,7 +3,6 @@ package jwt
 import (
 	"github.com/chur-squad/loveframe-server/internal"
 	_error "github.com/chur-squad/loveframe-server/error"
-	"fmt"
 )
 
 const (
@@ -63,7 +62,6 @@ func NewManager(opts ...ManagerOption) (Manager, error) {
 	for _, opt := range mergeOpts {
 		opt.apply(m)
 	}
-	fmt.Print(string(m.userJwtSalt), len(m.userJwtSalt))
 	if len(m.userJwtSalt) == 0  {
 		return nil, _error.WrapError(internal.ErrInvalidParams)
 	}
@@ -78,6 +76,7 @@ func (m *manager) GenerateUserJwt(encrypted string) (UserJwt, error) {
 	}
 
 	jwtToken, err := ParseJwtByHMAC256(encrypted, m.userJwtSalt)
+	
 	if err != nil {
 		return UserJwt{}, _error.WrapError(err)
 	}
