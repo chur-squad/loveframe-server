@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"time"
 	"strings"
-	"github.com/chur-squad/loveframe-server/internal"
-	"github.com/labstack/echo/v4"	
+	"github.com/chur-squad/loveframe-server/internal"	
 	_jwt "github.com/chur-squad/loveframe-server/jwt"
 	_error "github.com/chur-squad/loveframe-server/error"
+	_context "github.com/chur-squad/loveframe-server/context"
 )
 type Extension string
 
@@ -45,7 +45,7 @@ var (
 )
 
 type Manager interface {
-	GetPhotoFromCdn(ctx echo.Context, jwt _jwt.UserJwt) ([]byte, error)
+	GetPhotoFromCdn(ctx _context.EchoContext, jwt _jwt.UserJwt) ([]byte, error)
 }
 
 type photoMaker struct {
@@ -64,7 +64,7 @@ func (maker *photoMaker) Valid() (ok bool) {
 }
 
 // GetManifestFromCdn @photoMaker reads original manifest from cdn and returns manipulated manifest
-func (maker *photoMaker) GetPhotoFromCdn(ctx echo.Context, jwt _jwt.UserJwt) ([]byte, error) {
+func (maker *photoMaker) GetPhotoFromCdn(ctx _context.EchoContext, jwt _jwt.UserJwt) ([]byte, error) {
 	// get cdn endpoint
 	endpoint, err := maker.getCdnEndpoint()
 	if err != nil {
@@ -79,7 +79,6 @@ func (maker *photoMaker) GetPhotoFromCdn(ctx echo.Context, jwt _jwt.UserJwt) ([]
 
 	// get original manifest
 	req, err := http.NewRequest(http.MethodGet, endpoint+"/"+key, nil) // method Get
-	
 	if err != nil {
 		return nil, _error.WrapError(err)
 	}
@@ -89,13 +88,13 @@ func (maker *photoMaker) GetPhotoFromCdn(ctx echo.Context, jwt _jwt.UserJwt) ([]
 		return nil, _error.WrapError(err)
 	}
 	defer resp.Body.Close()
-
+)
 	// check response status
 	if resp.StatusCode != http.StatusOK {
 		return nil, _error.WrapError(_error.ErrUnknown)
 	}
 
-	// read original manifest
+	// read image to byte
 	bys, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, _error.WrapError(err)
@@ -110,7 +109,7 @@ func (maker *photoMaker) getCdnEndpoint() (string, error) {
 }
 
 // getKeyFromCtxAndJwt @photoMaker returns key for given context and jwt
-func (maker *photoMaker) getKeyFromCtxAndJwt(ctx echo.Context, jwt _jwt.UserJwt) (string, error) {
+func (maker *photoMaker) getKeyFromCtxAndJwt(ctx _context.EchoContext, jwt _jwt.UserJwt) (string, error) {
 	// check if request path and jwt path match
 	var pathPattern, pathExtension, jwtPattern, jwtExtension string
 	if pathSeps := strings.Split(strings.TrimPrefix(ctx.Request().URL.Path, "/api/photos/"), "/"); len(pathSeps) >= 1 {
@@ -126,12 +125,12 @@ func (maker *photoMaker) getKeyFromCtxAndJwt(ctx echo.Context, jwt _jwt.UserJwt)
 		}
 	}
 	if pathPattern != jwtPattern || pathExtension != jwtExtension {
-		return "", _error.WrapError(internal.ErrUnsupportedS3BucketKeyManifest)
+		return "", _error.WrapError(internal.ErrUnsupportedS3BucketKey)
 	}
 	return strings.TrimPrefix(jwt.Pattern, "/"), nil
 }
 
-func (maker *photoMaker) requestCdn(ctx echo.Context, req *http.Request) (*http.Response, error) {
+func (maker *photoMaker) requestCdn(ctx _context.EchoContext, req *http.Request) (*http.Response, error) {
 	resp, err := maker.cdnClient.Do(req)
 	return resp, err
 }

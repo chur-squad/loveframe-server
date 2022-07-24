@@ -2,15 +2,15 @@ package mysql
 
 import (
 	"errors"
-	"github.com/labstack/echo/v4"
 	_error "github.com/chur-squad/loveframe-server/error"
+	_context "github.com/chur-squad/loveframe-server/context"
 	"github.com/chur-squad/loveframe-server/internal"
 	"gorm.io/gorm"
 	"time"
 )
 
 type UserModel interface {
-	UserById(ctx echo.Context, id int64) (*User, error)
+	UserById(ctx _context.EchoContext, id int64) (*User, error)
 	AddUser(id int, name string) error
 }
 
@@ -50,7 +50,7 @@ func (c *connector) AddUser (Id int, Name string) error {
 } 
 
 // UserById returns user by id.
-func (c *connector) UserById(ctx echo.Context, id int64) (*User, error) {
+func (c *connector) UserById(ctx _context.EchoContext, id int64) (*User, error) {
 	if ctx == nil || id <= 0 {
 		return nil, _error.WrapError(internal.ErrInvalidParams)
 	}

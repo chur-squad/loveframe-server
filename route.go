@@ -48,7 +48,6 @@ func addRoute(e *echo.Echo, h *handler.Handler) error {
 
 	//apiGroup.GET("/friends/*", apiH.Friends)
 	// photos API need jwt from context
-	// when jwt query set in context?
 	apiGroup.GET("/photos/*", apiH.Photos)
 
 	return nil

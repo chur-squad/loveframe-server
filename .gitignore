@@ -12,6 +12,10 @@
 *.so
 *.dylib
 
+db
+
+#loveframe-server
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -42,6 +46,8 @@ go.work
 
 # AWS User-specific
 .idea/**/aws.xml
+
+loveframe-server
 
 # Generated files
 .idea/**/contentModel.xml

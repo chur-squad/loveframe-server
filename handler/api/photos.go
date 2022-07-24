@@ -2,7 +2,8 @@ package api_handler
 
 import (
 	_error "github.com/chur-squad/loveframe-server/error"
-	_jwt "github.com/chur-squad/loveframe-server/jwt"
+	_context "github.com/chur-squad/loveframe-server/context"
+	api_param "github.com/chur-squad/loveframe-server/handler/api/param"
 	"github.com/labstack/echo/v4"
 )
 
@@ -11,19 +12,19 @@ const (
 )
 
 // Manifest is serving a content manifest file which customized manually.
+// test request
+//http://localhost:8080/api/photos?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFMk5UZ3lNall3T0RNc0ltWnlhV1Z1WkVsa0lqb2lhRzl1WjJKcGJpSXNJbkJoZEhSbGNtNGlPaUl2YW1GbGFIbDFiaTkwWlhOMExtcHdaV2NpZlEuTEt0RndWM1hRYUwwYUE1S2xaYWRMa3hrYU5EWlZ4SkN2dWdxbUFyRFJSYw
 func (h *Handler) Photos(c echo.Context) error {
-	ctx := c
-	// Ctx query setting logic check needed
-	encryptedJwt := ctx.QueryParam("jwt")
-
-	m, err := _jwt.NewManager()
+	ctx := c.(_context.EchoContext)
+	// parse parameters
+	param, err := api_param.GenerateUserParam(ctx)
 	if err != nil {
-		// can change error type
 		return photoError(ctx, _error.WrapError(err))
 	}
-	jwt, err := m.GenerateUserJwt(encryptedJwt)
+	// parse jwt struct for manifest
+	jwt, err := h.parent.Jwt.GenerateUserJwt(param.Jwt)
+	
 	if err != nil {
-		// can change error type
 		return photoError(ctx, _error.WrapError(err))
 	}
 
@@ -35,18 +36,20 @@ func (h *Handler) Photos(c echo.Context) error {
 	headers := map[string]string{
 		echo.HeaderAccessControlAllowOrigin:   "*",
 		echo.HeaderAccessControlRequestMethod: "*",
+		headerCacheControl: "max-age=90000, public",
+		echo.HeaderContentType: "image/jpeg",
 	}
 	
 	return photoOK(ctx, headers, photo)
 }
 
-func photoError(ctx echo.Context, err error) error {
+func photoError(ctx _context.EchoContext, err error) error {
 	// if a request returns http 4xx or 5xx, cloudfront caches about 5 minutes.
 	// maybe if http 400, 403, 412, 415 status with cache-control header returns, it's able to control cache time.
 	return err
 }
 
-func photoOK(ctx echo.Context, headers map[string]string, body []byte) error {
+func photoOK(ctx _context.EchoContext, headers map[string]string, body []byte) error {
 	for k, v := range headers {
 		ctx.Response().Header().Set(k, v)
 	}
