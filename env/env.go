@@ -7,6 +7,8 @@ import (
 var (
 	// cdn endpoint for photo
 	cdnEndpoint = os.Getenv("CDN_ENDPOINT")
+	// user Jwt salt 
+	userJwtSalt = os.Getenv("USER_JWT_SALT")
 	// user code hash salt
 	userCodeSalt = os.Getenv("USER_CODE_SALT")
 	// group code hash salt
@@ -22,6 +24,11 @@ var (
 	// database name
 	databaseName = os.Getenv("DATABASE_NAME")
 )
+
+// GetUserJwtSalt returns jwt for user info hash salt
+func GetUserJwtSalt() string {
+	return userJwtSalt
+}
 
 // GetUserCodeSalt returns user code hash salt
 func GetUserCodeSalt() string {
