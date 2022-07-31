@@ -88,7 +88,7 @@ func (maker *photoMaker) GetPhotoFromCdn(ctx _context.EchoContext, jwt _jwt.User
 		return nil, _error.WrapError(err)
 	}
 	defer resp.Body.Close()
-)
+
 	// check response status
 	if resp.StatusCode != http.StatusOK {
 		return nil, _error.WrapError(_error.ErrUnknown)
