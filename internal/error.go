@@ -32,4 +32,5 @@ var (
 	// ErrReqInvalidArguments occurs when request arguments is invalid or not exist.
 	ErrReqInvalidArguments            = errors.New("[err] invalid arguments for requests")
 	ErrUnsupportedS3BucketKey = errors.New("[err] unsupported s3 bucket key")
+	ErrDatabaseUpdate = errors.New("[err] database prcoess is failed")
 )

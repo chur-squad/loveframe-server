@@ -8,12 +8,15 @@ import (
 
 // UsertJwt is user struct for server appropriate photo.
 type UserJwt struct {
-	FriendID		string	`name:"friend_id" tag:"required" min:"0"`
+	//Created			string `name:"created", tag:"required", min"0"` 
+	//LastUpdated		string `name:"last_updated, tag:"required", min"0"`
+	ID				int64  	`name:"id", tag:"required", min"0"`
+	Name			string  `name:"name", tag:"required", min"0"`
+	FriendID		int64	`name:"friend_id" tag:"required" min:"0"`
 	Exp				int64	`name:"exp" tag:"required" min:"0"`
 	Pattern			string	`name:"pattern" tag:"required" min:"0"`
 }
 
-// newManifestJwt creates a manifestJWT struct using reflect methods(it has an overhead for heap memory).
 func (m *manager) newUserJwt(jwtToken *jwt.Token) (UserJwt, error) {
 	// func (class) func_name (param) (return)
 	if jwtToken == nil {
