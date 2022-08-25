@@ -63,7 +63,7 @@ func (maker *photoMaker) Valid() (ok bool) {
 	return
 }
 
-// GetManifestFromCdn @photoMaker reads original manifest from cdn and returns manipulated manifest
+// GetPhotoFromCdn @photoMaker reads original photo from cdn
 func (maker *photoMaker) GetPhotoFromCdn(ctx _context.EchoContext, jwt _jwt.UserJwt) ([]byte, error) {
 	// get cdn endpoint
 	endpoint, err := maker.getCdnEndpoint()
@@ -77,7 +77,7 @@ func (maker *photoMaker) GetPhotoFromCdn(ctx _context.EchoContext, jwt _jwt.User
 		return nil, _error.WrapError(err)
 	}
 
-	// get original manifest
+	//get photo
 	req, err := http.NewRequest(http.MethodGet, endpoint+"/"+key, nil) // method Get
 	if err != nil {
 		return nil, _error.WrapError(err)
@@ -88,7 +88,7 @@ func (maker *photoMaker) GetPhotoFromCdn(ctx _context.EchoContext, jwt _jwt.User
 		return nil, _error.WrapError(err)
 	}
 	defer resp.Body.Close()
-)
+
 	// check response status
 	if resp.StatusCode != http.StatusOK {
 		return nil, _error.WrapError(_error.ErrUnknown)
@@ -135,7 +135,7 @@ func (maker *photoMaker) requestCdn(ctx _context.EchoContext, req *http.Request)
 	return resp, err
 }
 
-// NewManager returns a manifest object that is implemented Manager interface.
+// NewManager returns a photo object that is implemented Manager interface.
 func NewManager(opts ...Option) (Manager, error) {
 	maker := &photoMaker{}
 

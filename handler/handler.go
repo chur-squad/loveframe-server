@@ -4,6 +4,7 @@ import (
 	_error "github.com/chur-squad/loveframe-server/error"
 	"github.com/chur-squad/loveframe-server/mysql"
 	photos "github.com/chur-squad/loveframe-server/photos"
+	users "github.com/chur-squad/loveframe-server/users"
 	jwt "github.com/chur-squad/loveframe-server/jwt"
 )
 
@@ -12,6 +13,7 @@ type (
 	Handler struct {
 		Cfg			*Config
 		Photo		photos.Manager
+		User		users.Manager
 		Mysql       mysql.Mysql		
 		Jwt			jwt.Manager
 	}
@@ -43,6 +45,8 @@ func NewHandler(opts ...Option) (*Handler, error) {
 		photos.WithCdnEndpoint(h.Cfg.CdnEndpoint),
 	)
 
+	user, err := users.NewManager()
+
 	mysql, err := mysql.NewMysql(h.Cfg.MysqlDSN, 2)
 
 	if err != nil {
@@ -50,6 +54,7 @@ func NewHandler(opts ...Option) (*Handler, error) {
 	}
 	h.Jwt = jwt
 	h.Photo = photo
+	h.User = user
 	h.Mysql = mysql
 
 	return h, nil

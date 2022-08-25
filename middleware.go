@@ -126,6 +126,7 @@ func requiredMiddlewareChain() ([]echo.MiddlewareFunc, error) {
 			logMap := mctx.GetLog()
 			logMap["latency"] = strconv.FormatInt(int64(duration), 10)
 			logMap["latency_human"] = duration.String()
+
 			if ckerr != nil {
 				if code, httpErr := _error.ExtractEchoHttpError(ckerr); httpErr == nil {
 					status = http.StatusInternalServerError

@@ -69,7 +69,7 @@ func NewManager(opts ...ManagerOption) (Manager, error) {
 	return m, nil
 }
 
-// GenerateManifestJwt creates ManifestJwt struct which includes information for information for contents manifest.
+// GenerateUserJwt creates UserJwt struct which includes information for information for User info.
 func (m *manager) GenerateUserJwt(encrypted string) (UserJwt, error) {
 	if encrypted == "" {
 		return UserJwt{}, _error.WrapError(internal.ErrInvalidParams)
