@@ -2,8 +2,8 @@ package mysql
 
 import (
 	"errors"
-	_error "github.com/chur-squad/loveframe-server/error"
 	_context "github.com/chur-squad/loveframe-server/context"
+	_error "github.com/chur-squad/loveframe-server/error"
 	"github.com/chur-squad/loveframe-server/internal"
 	"gorm.io/gorm"
 	"time"
@@ -12,17 +12,19 @@ import (
 type UserModel interface {
 	UserById(ctx _context.EchoContext, id int64) (*User, error)
 	AddUser(id int, name string) error
+	Connect(ctx _context.EchoContext, me *User, friend *User) error
+	updateUser(tx *gorm.DB, u *User) error
 }
 
 type User struct {
-	Id                  int       `gorm:"primary_key;column:id"`
-	Name                string    `gorm:"type:varchar(255);column:name"`
-	Password            string    `gorm:"type:varchar(255);column:password"`
-	PasswordSalt        string    `gorm:"type:varchar(255);column:password_salt"`
-	UploadImageDomain   string    `gorm:"type:varchar(255);column:upload_image_domain"`
-	FriendId        	string    `gorm:"type:varchar(255);column:friend_id"`
-	CreatedAt           time.Time `gorm:"type:datetime;column:created_at"`
-	UpdatedAt           time.Time `gorm:"type:datetime;column:updated_at"`
+	Id                int       `gorm:"primary_key;column:id"`
+	Name              string    `gorm:"type:varchar(255);column:name"`
+	Password          string    `gorm:"type:varchar(255);column:password"`
+	PasswordSalt      string    `gorm:"type:varchar(255);column:password_salt"`
+	UploadImageDomain string    `gorm:"type:varchar(255);column:upload_image_domain"`
+	FriendId          string    `gorm:"type:varchar(255);column:friend_id"`
+	CreatedAt         time.Time `gorm:"type:datetime;column:created_at"`
+	UpdatedAt         time.Time `gorm:"type:datetime;column:updated_at"`
 }
 
 // TableName returns table-name, it is using by gorm when extracting table name.
@@ -35,19 +37,18 @@ func (u *User) IsEmpty() bool {
 	return u.Id == 0
 }
 
-// addUser
-func (c *connector) AddUser (Id int, Name string) error {
+func (c *connector) AddUser(Id int, Name string) error {
 	//get context from request
 	db := c.loveframeDB
 
 	db.AutoMigrate(&User{})
 	db.Create(&User{Id: Id, Name: Name, CreatedAt: time.Now(), UpdatedAt: time.Now()})
-	
-	var	checkUser User
+
+	var checkUser User
 	db.First(&checkUser, 1)
 
 	return nil
-} 
+}
 
 // UserById returns user by id.
 func (c *connector) UserById(ctx _context.EchoContext, id int64) (*User, error) {
@@ -85,4 +86,33 @@ func (c *connector) UserById(ctx _context.EchoContext, id int64) (*User, error) 
 	} else {
 		return user, nil
 	}
+}
+
+func (c *connector) Connect(ctx _context.EchoContext, me *User, friend *User) error {
+	me.FriendId, _ = internal.InterfaceToString(friend.Id)
+	friend.FriendId, _ = internal.InterfaceToString(me.Id)
+
+	tx := c.loveframeDB.WithContext(ctx.Request().Context())
+
+	err := c.updateUser(tx, me)
+	if err != nil {
+		return _error.WrapError(err)
+	}
+
+	err = c.updateUser(tx, friend)
+	if err != nil {
+		return _error.WrapError(err)
+	}
+
+	if err != nil {
+		return _error.WrapError(err)
+	}
+
+	return nil
+}
+
+func (c *connector) updateUser(tx *gorm.DB, u *User) error {
+	tx.Model(u).Update("friend_id", u.FriendId)
+
+	return nil
 }
