@@ -12,7 +12,7 @@ const (
 )
 
 // test request
-//http://localhost:8080/api/photos/photos/jaehyun/test.jpeg?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFMk5UZ3lNall3T0RNc0ltWnlhV1Z1WkVsa0lqb2lhRzl1WjJKcGJpSXNJbkJoZEhSbGNtNGlPaUl2YW1GbGFIbDFiaTkwWlhOMExtcHdaV2NpZlEuTEt0RndWM1hRYUwwYUE1S2xaYWRMa3hrYU5EWlZ4SkN2dWdxbUFyRFJSYw
+//çZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFMk5UazVPREV5T1Rnc0ltWnlhV1Z1WkY5cFpDSTZNaXdpYVdRaU9qRXNJbTVoYldVaU9pSm9iMjVuWW1sdUlpd2ljR0YwZEdWeWJpSTZJaTl3YUc5MGIzTXZhbUZsYUhsMWJpOTBaWE4wTG1wd1pXY2lmUS5UZWlVSTVVYWQ4alBmekt3OE5DTXFZWENrXzVJOEpQajdNeDVzZlcxcV9R
 func (h *Handler) Photos(c echo.Context) error {
 	ctx := c.(_context.EchoContext)
 	// parse parameters
