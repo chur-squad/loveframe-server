@@ -15,7 +15,7 @@ type (
 	}
 )
 
-// GenerateManifestParam is to return param for contents manifest.
+// GenerateUserParam is to return param for user info.
 func GenerateUserParam(ctx _context.EchoContext) (param UserParam, err error) {
 	if ctx == nil {
 		err = internal.ErrInvalidParams
@@ -27,7 +27,6 @@ func GenerateUserParam(ctx _context.EchoContext) (param UserParam, err error) {
 		err = _error.WrapError(suberr)
 		return
 	}
-
 	// check parameters is empty or not.
 	encodedJwt, _ := internal.InterfaceToString(userParam["jwt"])
 	if encodedJwt == "" {

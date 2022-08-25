@@ -59,7 +59,7 @@ func unmarshalJwt(claims jwt.MapClaims, bypass bool, v interface{}) error {
 	for i := 0; i < value.NumField(); i++ {
 		v := value.Field(i)
 		vt := value.Type().Field(i)
-		if tag, ok := vt.Tag.Lookup("name"); ok { // extract `name` comment 여기서 name
+		if tag, ok := vt.Tag.Lookup("name"); ok {
 			//conventional format
 			required := vt.Tag.Get("tag") 
 			elem, eok := claims[tag]      
