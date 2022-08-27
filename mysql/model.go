@@ -11,18 +11,17 @@ import (
 
 type UserModel interface {
 	UserById(ctx _context.EchoContext, id int64) (*User, error)
-	AddUser(id int, name string) error
+	AddUser(id int64, name string, friend_id int64) error
 	Connect(ctx _context.EchoContext, me *User, friend *User) error
 	updateUser(tx *gorm.DB, u *User) error
 }
-
 type User struct {
-	Id                int       `gorm:"primary_key;column:id"`
+	Id                int64     `gorm:"primary_key;column:id"`
 	Name              string    `gorm:"type:varchar(255);column:name"`
 	Password          string    `gorm:"type:varchar(255);column:password"`
 	PasswordSalt      string    `gorm:"type:varchar(255);column:password_salt"`
 	UploadImageDomain string    `gorm:"type:varchar(255);column:upload_image_domain"`
-	FriendId          string    `gorm:"type:varchar(255);column:friend_id"`
+	FriendId          int64     `gorm:"type:varchar(255);column:friend_id"`
 	CreatedAt         time.Time `gorm:"type:datetime;column:created_at"`
 	UpdatedAt         time.Time `gorm:"type:datetime;column:updated_at"`
 }
@@ -37,12 +36,13 @@ func (u *User) IsEmpty() bool {
 	return u.Id == 0
 }
 
-func (c *connector) AddUser(Id int, Name string) error {
+// addUser
+func (c *connector) AddUser(Id int64, Name string, FriendID int64) error {
 	//get context from request
 	db := c.loveframeDB
 
 	db.AutoMigrate(&User{})
-	db.Create(&User{Id: Id, Name: Name, CreatedAt: time.Now(), UpdatedAt: time.Now()})
+	db.Create(&User{Id: Id, Name: Name, FriendId: FriendID, CreatedAt: time.Now(), UpdatedAt: time.Now()})
 
 	var checkUser User
 	db.First(&checkUser, 1)
@@ -89,8 +89,8 @@ func (c *connector) UserById(ctx _context.EchoContext, id int64) (*User, error) 
 }
 
 func (c *connector) Connect(ctx _context.EchoContext, me *User, friend *User) error {
-	me.FriendId, _ = internal.InterfaceToString(friend.Id)
-	friend.FriendId, _ = internal.InterfaceToString(me.Id)
+	me.FriendId = friend.Id
+	friend.FriendId = me.Id
 
 	tx := c.loveframeDB.WithContext(ctx.Request().Context())
 

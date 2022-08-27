@@ -1,8 +1,8 @@
 package api_handler
 
 import (
-	_error "github.com/chur-squad/loveframe-server/error"
 	_context "github.com/chur-squad/loveframe-server/context"
+	_error "github.com/chur-squad/loveframe-server/error"
 	api_param "github.com/chur-squad/loveframe-server/handler/api/param"
 	"github.com/labstack/echo/v4"
 )
@@ -11,9 +11,8 @@ const (
 	headerCacheControl = "Cache-Control"
 )
 
-// Manifest is serving a content manifest file which customized manually.
 // test request
-//http://localhost:8080/api/photos?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFMk5UZ3lNall3T0RNc0ltWnlhV1Z1WkVsa0lqb2lhRzl1WjJKcGJpSXNJbkJoZEhSbGNtNGlPaUl2YW1GbGFIbDFiaTkwWlhOMExtcHdaV2NpZlEuTEt0RndWM1hRYUwwYUE1S2xaYWRMa3hrYU5EWlZ4SkN2dWdxbUFyRFJSYw
+//çZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmxlSEFpT2pFMk5UazVPREV5T1Rnc0ltWnlhV1Z1WkY5cFpDSTZNaXdpYVdRaU9qRXNJbTVoYldVaU9pSm9iMjVuWW1sdUlpd2ljR0YwZEdWeWJpSTZJaTl3YUc5MGIzTXZhbUZsYUhsMWJpOTBaWE4wTG1wd1pXY2lmUS5UZWlVSTVVYWQ4alBmekt3OE5DTXFZWENrXzVJOEpQajdNeDVzZlcxcV9R
 func (h *Handler) Photos(c echo.Context) error {
 	ctx := c.(_context.EchoContext)
 	// parse parameters
@@ -21,9 +20,9 @@ func (h *Handler) Photos(c echo.Context) error {
 	if err != nil {
 		return photoError(ctx, _error.WrapError(err))
 	}
-	// parse jwt struct for manifest
+	// parse jwt struct for user
 	jwt, err := h.parent.Jwt.GenerateUserJwt(param.Jwt)
-	
+
 	if err != nil {
 		return photoError(ctx, _error.WrapError(err))
 	}
@@ -36,10 +35,10 @@ func (h *Handler) Photos(c echo.Context) error {
 	headers := map[string]string{
 		echo.HeaderAccessControlAllowOrigin:   "*",
 		echo.HeaderAccessControlRequestMethod: "*",
-		headerCacheControl: "max-age=90000, public",
-		echo.HeaderContentType: "image/jpeg",
+		headerCacheControl:                    "max-age=90000, public",
+		echo.HeaderContentType:                "image/jpeg",
 	}
-	
+
 	return photoOK(ctx, headers, photo)
 }
 

@@ -4,9 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/chur-squad/loveframe-server/env"
 	_error "github.com/chur-squad/loveframe-server/error"
 	"github.com/chur-squad/loveframe-server/handler"
-	"github.com/chur-squad/loveframe-server/env"
 	"github.com/labstack/echo/v4"
 	"os/signal"
 	"runtime"
@@ -42,8 +42,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	//h.Mysql.AddUser(1, "Kim jaehyun")
 
 	// create signal handler
 	signalCtx, signalStop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -86,7 +84,7 @@ func initEchoServer(h *handler.Handler) (*echo.Echo, error) {
 
 func createConfigForHandler() (*handler.Config, error) {
 	// generate handler config
-	
+
 	cfg := &handler.Config{
 		CdnEndpoint: env.GetCdnEndpoint(),
 		UserJwtSalt: env.GetUserJwtSalt(),
@@ -110,23 +108,3 @@ func createConfigForHandler() (*handler.Config, error) {
 
 	return cfg, nil
 }
-
-/*
-func connectDatabase() (database *sql.DB, err error) {
-	user := env.GetDatabaseUsername()
-	password := env.GetDatabasePassword()
-	dbname := env.GetDatabaseName()
-	dbconfig := fmt.Sprintf("%s:%s@/%s", user, password, dbname)
-	
-	db, err := sql.Open("mysql", dbconfig)
-	if err != nil {
-		return nil, _error.WrapError(err)
-	}
-	db.SetConnMaxLifetime(time.Minute * 1)
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
-
-	fmt.Print()
-	return db, nil
-}
-*/
