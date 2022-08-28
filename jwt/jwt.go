@@ -5,14 +5,14 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/dgrijalva/jwt-go"
-	"github.com/chur-squad/loveframe-server/internal"
 	_error "github.com/chur-squad/loveframe-server/error"
+	"github.com/chur-squad/loveframe-server/internal"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gjbae1212/go-wraperror"
 )
 
 // ParseJwtByHMAC256 parses a token and validates.
-func ParseJwtByHMAC256(data string, hmacSalt []byte) (*jwt.Token, error) { 
+func ParseJwtByHMAC256(data string, hmacSalt []byte) (*jwt.Token, error) {
 	token, err := jwt.Parse(data, func(token *jwt.Token) (interface{}, error) {
 		//jwt.Parse method will be return token, token include header + payload + signature
 		if token.Method.Alg() != hs256 {
@@ -61,8 +61,8 @@ func unmarshalJwt(claims jwt.MapClaims, bypass bool, v interface{}) error {
 		vt := value.Type().Field(i)
 		if tag, ok := vt.Tag.Lookup("name"); ok {
 			//conventional format
-			required := vt.Tag.Get("tag") 
-			elem, eok := claims[tag]      
+			required := vt.Tag.Get("tag")
+			elem, eok := claims[tag]
 
 			if required == "required" && !eok && !bypass {
 				minStr, mok := vt.Tag.Lookup("min")

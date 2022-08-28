@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"net/http"
+	_error "github.com/chur-squad/loveframe-server/error"
 	"github.com/chur-squad/loveframe-server/handler"
 	api_handler "github.com/chur-squad/loveframe-server/handler/api"
-	_error "github.com/chur-squad/loveframe-server/error"
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
 // addRoute is to set route rule on Echo.
@@ -46,7 +46,7 @@ func addRoute(e *echo.Echo, h *handler.Handler) error {
 	apiGroup := e.Group("/api", apiChains...)
 	// making api chain by grouping
 
-	//apiGroup.GET("/friends/*", apiH.Friends)
+	apiGroup.POST("/friends/inviteCode", apiH.AddFriend)
 	// photos API need jwt from context
 	apiGroup.GET("/users/me/photo/*", apiH.Photos)
 	apiGroup.POST("/users", apiH.UserRegister)

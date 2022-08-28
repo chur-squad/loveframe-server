@@ -1,8 +1,8 @@
 package api_handler
 
 import (
-	_error "github.com/chur-squad/loveframe-server/error"
 	_context "github.com/chur-squad/loveframe-server/context"
+	_error "github.com/chur-squad/loveframe-server/error"
 	api_param "github.com/chur-squad/loveframe-server/handler/api/param"
 	"github.com/labstack/echo/v4"
 )
@@ -22,7 +22,7 @@ func (h *Handler) Photos(c echo.Context) error {
 	}
 	// parse jwt struct for user
 	jwt, err := h.parent.Jwt.GenerateUserJwt(param.Jwt)
-	
+
 	if err != nil {
 		return photoError(ctx, _error.WrapError(err))
 	}
@@ -35,10 +35,10 @@ func (h *Handler) Photos(c echo.Context) error {
 	headers := map[string]string{
 		echo.HeaderAccessControlAllowOrigin:   "*",
 		echo.HeaderAccessControlRequestMethod: "*",
-		headerCacheControl: "max-age=90000, public",
-		echo.HeaderContentType: "image/jpeg",
+		headerCacheControl:                    "max-age=90000, public",
+		echo.HeaderContentType:                "image/jpeg",
 	}
-	
+
 	return photoOK(ctx, headers, photo)
 }
 

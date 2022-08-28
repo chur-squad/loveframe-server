@@ -4,9 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/chur-squad/loveframe-server/env"
 	_error "github.com/chur-squad/loveframe-server/error"
 	"github.com/chur-squad/loveframe-server/handler"
-	"github.com/chur-squad/loveframe-server/env"
 	"github.com/labstack/echo/v4"
 	"os/signal"
 	"runtime"
@@ -84,7 +84,7 @@ func initEchoServer(h *handler.Handler) (*echo.Echo, error) {
 
 func createConfigForHandler() (*handler.Config, error) {
 	// generate handler config
-	
+
 	cfg := &handler.Config{
 		CdnEndpoint: env.GetCdnEndpoint(),
 		UserJwtSalt: env.GetUserJwtSalt(),

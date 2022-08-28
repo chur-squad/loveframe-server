@@ -2,34 +2,36 @@ package handler
 
 import (
 	_error "github.com/chur-squad/loveframe-server/error"
+	"github.com/chur-squad/loveframe-server/friends"
+	jwt "github.com/chur-squad/loveframe-server/jwt"
 	"github.com/chur-squad/loveframe-server/mysql"
 	photos "github.com/chur-squad/loveframe-server/photos"
 	users "github.com/chur-squad/loveframe-server/users"
-	jwt "github.com/chur-squad/loveframe-server/jwt"
 )
 
 type (
 	// Handler is handler struct for using in Echo.
 	Handler struct {
-		Cfg			*Config
-		Photo		photos.Manager
-		User		users.Manager
-		Mysql       mysql.Mysql		
-		Jwt			jwt.Manager
+		Cfg    *Config
+		Photo  photos.Manager
+		User   users.Manager
+		Mysql  mysql.Mysql
+		Jwt    jwt.Manager
+		Friend friends.Manager
 	}
 )
 
 // NewHandler is to create a handler object.
 func NewHandler(opts ...Option) (*Handler, error) {
 	h := &Handler{}
-	//handelr is struct 
+	//handelr is struct
 
 	mergeOpts := []Option{}
 	mergeOpts = append(mergeOpts, opts...)
 	for _, opt := range mergeOpts {
 		opt.apply(h)
 	}
-	
+
 	// make jwt manager.
 	jwt, err := jwt.NewManager(
 		jwt.WithUserJwtSalt([]byte(h.Cfg.UserJwtSalt)),
@@ -49,6 +51,8 @@ func NewHandler(opts ...Option) (*Handler, error) {
 
 	mysql, err := mysql.NewMysql(h.Cfg.MysqlDSN, 2)
 
+	friend, err := friends.NewManager(mysql)
+
 	if err != nil {
 		return nil, _error.WrapError(err)
 	}
@@ -56,6 +60,7 @@ func NewHandler(opts ...Option) (*Handler, error) {
 	h.Photo = photo
 	h.User = user
 	h.Mysql = mysql
+	h.Friend = friend
 
 	return h, nil
 }

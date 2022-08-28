@@ -1,16 +1,17 @@
 package photos
 
 import (
+	_context "github.com/chur-squad/loveframe-server/context"
+	_error "github.com/chur-squad/loveframe-server/error"
+	"github.com/chur-squad/loveframe-server/internal"
+	_jwt "github.com/chur-squad/loveframe-server/jwt"
 	"io/ioutil"
 	"net"
 	"net/http"
-	"time"
 	"strings"
-	"github.com/chur-squad/loveframe-server/internal"	
-	_jwt "github.com/chur-squad/loveframe-server/jwt"
-	_error "github.com/chur-squad/loveframe-server/error"
-	_context "github.com/chur-squad/loveframe-server/context"
+	"time"
 )
+
 type Extension string
 
 const (
@@ -22,7 +23,6 @@ const (
 const (
 	contentTypeImage = "image"
 )
-
 
 var (
 	defaultOpts = []Option{
@@ -50,8 +50,8 @@ type Manager interface {
 
 type photoMaker struct {
 	// cdn
-	cdnClient			*http.Client
-	cdnEndpoint			string
+	cdnClient   *http.Client
+	cdnEndpoint string
 }
 
 // Valid checks this object is valid or not.
@@ -99,7 +99,7 @@ func (maker *photoMaker) GetPhotoFromCdn(ctx _context.EchoContext, jwt _jwt.User
 	if err != nil {
 		return nil, _error.WrapError(err)
 	}
-	
+
 	return bys, nil
 }
 

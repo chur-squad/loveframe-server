@@ -1,10 +1,10 @@
 package users
 
 import (
-	"github.com/chur-squad/loveframe-server/internal"	
-	_jwt "github.com/chur-squad/loveframe-server/jwt"
-	_error "github.com/chur-squad/loveframe-server/error"
 	_context "github.com/chur-squad/loveframe-server/context"
+	_error "github.com/chur-squad/loveframe-server/error"
+	"github.com/chur-squad/loveframe-server/internal"
+	_jwt "github.com/chur-squad/loveframe-server/jwt"
 )
 
 type Manager interface {
@@ -12,7 +12,7 @@ type Manager interface {
 }
 
 type userMaker struct {
-	userJwt			_jwt.UserJwt	
+	userJwt _jwt.UserJwt
 }
 
 //make user struct for register and store DB
@@ -22,17 +22,17 @@ func (maker *userMaker) GetUserInfo(ctx _context.EchoContext, jwt _jwt.UserJwt) 
 	//Get User data from jwt claim
 	//check current user data matches user struct format
 	//need to define return value : Is it need to return User Struct?
-	
+
 	return nil
 }
 
-//Add User data to database 
+//Add User data to database
 /* move to api for proper dependency
 func (maker *userMaker) AddUserToDB(jwt _jwt.UserJwt, mysql _handler.mysql) error {
-	//Save user data to Database from jwt 
+	//Save user data to Database from jwt
 	err := mysql.AddUser(jwt.ID, jwt.Name)
 	if err != nil {
-		return _error.WrapError(internal.ErrDatabaseUpdate) 
+		return _error.WrapError(internal.ErrDatabaseUpdate)
 	}
 }
 */
@@ -43,6 +43,7 @@ func (maker *userMaker) Valid() (ok bool) {
 	ok = true
 	return
 }
+
 // NewManager returns a user object that is implemented Manager interface.
 func NewManager() (Manager, error) {
 	maker := &userMaker{}
