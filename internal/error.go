@@ -20,9 +20,9 @@ var (
 	ErrJwtInvalid = errors.New("[err] this token is invalid")
 	// ErrJwtAlgNotHMAC256 occurs when this token doesn't create to using hs256.
 	ErrJwtAlgNotHMAC256 = errors.New("[err] this token doesn't create to using hmac256")
-	ErrUserNotFound = errors.New("[err] user not found")
+	ErrUserNotFound     = errors.New("[err] user not found")
 	// ErrReqInvalidArguments occurs when request arguments is invalid or not exist.
-	ErrReqInvalidArguments            = errors.New("[err] invalid arguments for requests")
+	ErrReqInvalidArguments    = errors.New("[err] invalid arguments for requests")
 	ErrUnsupportedS3BucketKey = errors.New("[err] unsupported s3 bucket key")
-	ErrDatabaseUpdate = errors.New("[err] database prcoess is failed")
+	ErrDatabaseUpdate         = errors.New("[err] database prcoess is failed")
 )

@@ -3,7 +3,6 @@ package api_handler
 import (
 	"github.com/chur-squad/loveframe-server/handler"
 	"github.com/chur-squad/loveframe-server/internal"
-
 )
 
 type Handler struct {

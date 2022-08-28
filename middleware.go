@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/chur-squad/loveframe-server/internal"
 	_context "github.com/chur-squad/loveframe-server/context"
 	_error "github.com/chur-squad/loveframe-server/error"
+	"github.com/chur-squad/loveframe-server/internal"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -29,11 +29,11 @@ func addMiddleware(e *echo.Echo) error {
 	var err error
 
 	// set debug
-	e.Debug = true // when service deployed, need to change 
+	e.Debug = true // when service deployed, need to change
 	// set logging
 	e.HideBanner = true
 	e.HidePort = true
-	
+
 	// this timeout will wait until read to request body
 	e.Server.ReadTimeout = 20 * time.Second
 	// this timeout will wait until between read a body and write a response
@@ -136,7 +136,7 @@ func requiredMiddlewareChain() ([]echo.MiddlewareFunc, error) {
 				logMap["status"] = status
 				logMap["message"] = ckerr.Error()
 				mctx.SetExtra("error", ckerr.Error())
-	
+
 			} else {
 				status = mctx.Response().Status
 				logMap["status"] = status

@@ -9,11 +9,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-
-type userInfo struct{
-	ID			int64
-	Name 		string
-	FriendID	int64
+type userInfo struct {
+	ID       int64
+	Name     string
+	FriendID int64
 }
 
 func (h *Handler) UserRegister(c echo.Context) error {
@@ -34,19 +33,19 @@ func (h *Handler) UserRegister(c echo.Context) error {
 	// add access control headers
 	headers := map[string]string{
 		echo.HeaderAccessControlAllowOrigin:   "*",
-		echo.HeaderAccessControlAllowMethods:	"GET, POST, OPTIONS",
+		echo.HeaderAccessControlAllowMethods:  "GET, POST, OPTIONS",
 		echo.HeaderAccessControlRequestMethod: "*",
-		echo.HeaderContentType: "application/json",
+		echo.HeaderContentType:                "application/json",
 	}
 
-	return userRegisterOK(ctx, headers)	
+	return userRegisterOK(ctx, headers)
 }
 
 func userError(ctx _context.EchoContext, err error) error {
 	return err
 }
 
-func userRegisterOK(ctx _context.EchoContext, headers map[string]string) error{
+func userRegisterOK(ctx _context.EchoContext, headers map[string]string) error {
 	for k, v := range headers {
 		ctx.Response().Header().Set(k, v)
 	}
