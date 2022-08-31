@@ -17,6 +17,7 @@ type UserModel interface {
 }
 type User struct {
 	Id                int64     `gorm:"primary_key;column:id"`
+	Email             string    `gorm:"type:varchar(255);column:email""`
 	Name              string    `gorm:"type:varchar(255);column:name"`
 	Password          string    `gorm:"type:varchar(255);column:password"`
 	PasswordSalt      string    `gorm:"type:varchar(255);column:password_salt"`

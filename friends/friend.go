@@ -3,21 +3,19 @@ package friends
 import (
 	_context "github.com/chur-squad/loveframe-server/context"
 	"github.com/chur-squad/loveframe-server/internal"
-	"github.com/chur-squad/loveframe-server/jwt"
 	"github.com/chur-squad/loveframe-server/mysql"
 )
 
 type Manager interface {
-	AddFriend(ctx _context.EchoContext, jwt jwt.UserJwt, inviteCode string) error
+	AddFriend(ctx _context.EchoContext, meId int64, inviteCode *EncryptedInviteCode) error
 }
 
 type FriendMaker struct {
 	Mysql mysql.Mysql
 }
 
-func (maker *FriendMaker) AddFriend(ctx _context.EchoContext, jwt jwt.UserJwt, inviteCode string) error {
-	meId, _ := internal.InterfaceToInt64(jwt.UserId)
-	friendId := decodeUserId(inviteCode)
+func (maker *FriendMaker) AddFriend(ctx _context.EchoContext, meId int64, inviteCode *EncryptedInviteCode) error {
+	friendId := Decode(inviteCode)
 
 	m := maker.Mysql
 
