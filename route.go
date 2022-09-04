@@ -52,6 +52,8 @@ func addRoute(e *echo.Echo, h *handler.Handler) error {
 	apiGroup.GET("/users/me", apiH.UserDetail)
 	apiGroup.POST("/users", apiH.UserRegister)
 
+	apiGroup.POST("/auth/login", apiH.RequestLogin)
+
 	return nil
 }
 
