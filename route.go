@@ -47,7 +47,6 @@ func addRoute(e *echo.Echo, h *handler.Handler) error {
 	// making api chain by grouping
 
 	apiGroup.POST("/friends", apiH.AddFriend)
-	apiGroup.POST("/friends/inviteCode", apiH.AddFriend)
 	// photos API need jwt from context
 	apiGroup.GET("/users/me/photo/*", apiH.Photos)
 	apiGroup.GET("/users/me", apiH.UserDetail)
