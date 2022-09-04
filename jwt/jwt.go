@@ -1,9 +1,12 @@
 package jwt
 
 import (
+	"encoding/base64"
 	"fmt"
+	"github.com/chur-squad/loveframe-server/mysql"
 	"reflect"
 	"strconv"
+	"time"
 
 	_error "github.com/chur-squad/loveframe-server/error"
 	"github.com/chur-squad/loveframe-server/internal"
@@ -105,4 +108,21 @@ func unmarshalJwt(claims jwt.MapClaims, bypass bool, v interface{}) error {
 		}
 	}
 	return nil
+}
+
+func CreateJwt(user *mysql.User) string {
+
+	baseTime := time.Now().Add(100 * time.Hour)
+
+	Claims := jwt.MapClaims{
+		"id":        user.Id,
+		"name":      user.Name,
+		"friend_id": user.FriendId,
+		"exp":       baseTime.Unix(),
+		"pattern":   "/photos/jaehyun/test.jpg",
+	}
+	token, _ := NewJwtStringByHMAC256(Claims, []byte("loveframe"))
+	jwt := base64.RawURLEncoding.EncodeToString([]byte(token))
+
+	return jwt
 }
