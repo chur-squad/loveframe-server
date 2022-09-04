@@ -1,12 +1,11 @@
 package api_handler
 
 import (
-	"encoding/json"
 	_context "github.com/chur-squad/loveframe-server/context"
 	_error "github.com/chur-squad/loveframe-server/error"
 	"github.com/chur-squad/loveframe-server/friends"
+	api_param "github.com/chur-squad/loveframe-server/handler/api/param"
 	"github.com/labstack/echo/v4"
-	"io"
 )
 
 type addFriendRequest struct {
@@ -16,13 +15,15 @@ type addFriendRequest struct {
 func (h *Handler) AddFriend(c echo.Context) error {
 	ctx := c.(_context.EchoContext)
 
-	bytes, err := io.ReadAll(ctx.Request().Body)
+	param, err := api_param.GenerateUserParam(ctx)
 	if err != nil {
-		return userError(ctx, _error.WrapError(err))
+		return _error.WrapError(err)
 	}
 
-	var me userInfo
-	json.Unmarshal(bytes, &me)
+	jwt, err := h.parent.Jwt.GenerateUserJwt(param.Jwt)
+	if err != nil {
+		return _error.WrapError(err)
+	}
 
 	request := new(addFriendRequest)
 	if err = c.Bind(request); err != nil {
@@ -30,7 +31,7 @@ func (h *Handler) AddFriend(c echo.Context) error {
 	}
 
 	code := &friends.EncryptedInviteCode{Data: request.EncryptedInviteCode}
-	err = h.parent.Friend.AddFriend(ctx, me.ID, code)
+	err = h.parent.Friend.AddFriend(ctx, jwt.ID, code)
 	if err != nil {
 		return _error.WrapError(err)
 	}

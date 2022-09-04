@@ -22,17 +22,15 @@ func GenerateUserParam(ctx _context.EchoContext) (param UserParam, err error) {
 		return
 	}
 
-	userParam, suberr := ctx.GetParam()
-	if suberr != nil {
-		err = _error.WrapError(suberr)
-		return
-	}
 	// check parameters is empty or not.
-	encodedJwt, _ := internal.InterfaceToString(userParam["jwt"])
-	if encodedJwt == "" {
+	header := ctx.GetHeader()
+	authorization, _ := internal.InterfaceToString(header["Authorization"])
+	if authorization == "" {
 		err = _error.WrapError(internal.ErrInvalidParams)
 		return
 	}
+
+	encodedJwt := strings.Split(authorization, "Bearer ")[1]
 
 	// [warning] it must be the unpadded base64 encoding string. (padding is `=` string)
 	// RawURLEncoding deals with unpadded base64 string.
@@ -43,7 +41,5 @@ func GenerateUserParam(ctx _context.EchoContext) (param UserParam, err error) {
 	}
 
 	param.Jwt = string(rawJwt)
-	seps := strings.Split(ctx.Request().URL.Path, "/")
-	param.Format = strings.Split(seps[len(seps)-1], ".")[1]
 	return
 }
